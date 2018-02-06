@@ -1,41 +1,32 @@
-name:            aeson
-version:         1.2.3.0
-license:         BSD3
-license-file:    LICENSE
-category:        Text, Web, JSON
-copyright:       (c) 2011-2016 Bryan O'Sullivan
-                 (c) 2011 MailRank, Inc.
-author:          Bryan O'Sullivan <bos@serpentine.com>
-maintainer:      Adam Bergmark <adam@bergmark.nl>
-stability:       experimental
-tested-with:     GHC == 7.4.2, GHC == 7.6.3, GHC == 7.8.4, GHC == 7.10.3, GHC == 8.0.1
-synopsis:        Fast JSON parsing and encoding
-cabal-version:   >= 1.10
-homepage:        https://github.com/bos/aeson
-bug-reports:     https://github.com/bos/aeson/issues
-build-type:      Simple
+name: pheres
+version: 0.1.0.0
+
+category: Text, Web, JSON
+synopsis: Simple JSON parsing and encoding
+
 description:
-    A JSON parsing and encoding library optimized for ease of use
-    and high performance.
+    A JSON parsing and encoding library optimized for ease of use.
+    Forked from Aeson.
     .
-    To get started, see the documentation for the @Data.Aeson@ module
-    below.
-    .
-    Parsing performance on a late 2013 MacBook Pro (2.6GHz Core i7),
-    running 64-bit GHC 7.10.1, for mostly-English tweets from Twitter's
-    JSON search API:
-    .
-    * 6.4 KB payloads, English: 7570 msg\/sec (47.6 MB\/sec)
-    .
-    * 14.6 KB payloads, Japanese: 3261 msg\/sec (46.6 MB\/sec)
-    .
-    Encoding performance on the same machine and data:
-    .
-    * 6.4 KB payloads, English: 22738 msg\/sec (142.9 MB\/sec)
-    .
-    * 14.6 KB payloads, Japanese: 15911 msg\/sec (227.4 MB\/sec)
-    .
-    (A note on naming: in Greek mythology, Aeson was the father of Jason.)
+    (A note on naming: in Greek mythology, Pheres was a brother of Aeson.)
+
+homepage:    https://github.com/chris-martin/pheres
+bug-reports: https://github.com/chris-martin/pheres/issues
+
+stability: experimental
+tested-with: GHC == 8.2.2
+cabal-version: >= 1.10
+build-type: Simple
+
+license: BSD3
+license-file: LICENSE
+
+author:     Chris Martin <ch.martin@gmail.com>
+maintainer: Chris Martin <ch.martin@gmail.com>
+
+copyright: (c) 2018 Chris Martin
+           (c) 2011-2016 Bryan O'Sullivan
+           (c) 2011 MailRank, Inc.
 
 extra-source-files:
     *.yaml
@@ -48,7 +39,6 @@ extra-source-files:
     benchmarks/Typed/*.hs
     benchmarks/json-data/*.json
     cbits/*.c
-    changelog.md
     examples/*.cabal
     examples/*.hs
     examples/Twitter/*.hs
@@ -201,7 +191,7 @@ test-suite tests
   build-depends:
     HUnit,
     QuickCheck >= 2.10.0.1 && < 2.11,
-    aeson,
+    pheres,
     integer-logarithms >= 1 && <1.1,
     attoparsec,
     base,
@@ -252,4 +242,4 @@ test-suite tests
 
 source-repository head
   type:     git
-  location: git://github.com/bos/aeson.git
+  location: git://github.com/chris-martin/pheres.git
