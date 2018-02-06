@@ -7,8 +7,8 @@ result_re = re.compile(r'^\s*(\d+) good, (\d+\.\d+)s$', re.M)
 if len(sys.argv) > 1:
     parser_exe = sys.argv[1]
 else:
-    parser_exe = ('dist/build/aeson-benchmark-aeson-parse/' +
-                  'aeson-benchmark-aeson-parse')
+    parser_exe = ('dist/build/pheres-benchmark-pheres-parse/' +
+                  'pheres-benchmark-pheres-parse')
 
 def run(count, filename):
     print '    %s :: %s times' % (filename, count)

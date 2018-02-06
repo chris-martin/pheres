@@ -2,6 +2,7 @@ resolver: lts-8.24
 packages:
 - '.'
 - attoparsec-iso8601
+- benchmarks
 extra-deps:
 - QuickCheck-2.10.0.1
 - base-compat-0.9.3

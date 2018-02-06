@@ -1,18 +1,13 @@
-name:                aeson-benchmarks
-version:             0
-build-type:          Simple
-cabal-version:       >=1.10
+name: pheres-benchmarks
+version: 0
+
+build-type: Simple
+cabal-version: >=1.10
 
 flag bytestring-builder
   description: Depend on the bytestring-builder package for backwards compatibility.
   default: False
   manual: False
-
-flag local-aeson
-  description: Build the local version of aeson, to avoid rebuilding aeson's
-    reverse dependencies for benchmarking (statistics, criterion).
-  default: True
-  manual: True
 
 library
   default-language: Haskell2010
@@ -23,89 +18,19 @@ library
   else
     build-depends: bytestring >= 0.10.4
 
-  if flag(local-aeson)
+  build-depends: pheres
 
-    hs-source-dirs: .. ../ffi ../pure ../attoparsec-iso8601
-    c-sources:  ../cbits/unescape_string.c
-    build-depends:
-      attoparsec >= 0.13.0.1,
-      base == 4.*,
-      base-compat >= 0.9.1 && <0.10,
-      time-locale-compat >=0.1.1 && <0.2,
-      containers,
-      deepseq,
-      dlist >= 0.2,
-      fail == 4.9.*,
-      ghc-prim >= 0.2,
-      hashable >= 1.1.2.0,
-      mtl,
-      scientific >= 0.3.4.7 && < 0.4,
-      syb,
-      tagged >=0.8.3 && <0.9,
-      template-haskell >= 2.4,
-      text >= 1.2.3,
-      th-abstraction >= 0.2.2 && < 0.3,
-      time,
-      transformers,
-      unordered-containers >= 0.2.3.0,
-      uuid-types >= 1.0.3 && <1.1,
-      vector >= 0.7.1
+  reexported-modules:
+    Data.Aeson,
+    Data.Aeson.Encoding,
+    Data.Aeson.Parser.Internal,
+    Data.Aeson.Parser.UnescapeFFI,
+    Data.Aeson.Parser.UnescapePure,
+    Data.Aeson.Text,
+    Data.Aeson.TH,
+    Data.Aeson.Types
 
-    if !impl(ghc >= 7.10)
-      -- `Numeric.Natural` is available in base only since GHC 7.10 / base 4.8
-      build-depends: nats >= 1 && < 1.2
-
-    if impl(ghc >=7.8)
-      cpp-options: -DHAS_COERCIBLE
-
-    if !impl(ghc >= 8.0)
-      -- `Data.Semigroup` is available in base only since GHC 8.0 / base 4.9
-      build-depends: semigroups >= 0.18.2 && < 0.19
-
-    include-dirs: ../include
-
-    ghc-options: -O2 -Wall
-    cpp-options: -DGENERICS
-
-    exposed-modules:
-      Data.Aeson
-      Data.Aeson.Compat
-      Data.Aeson.Encoding
-      Data.Aeson.Encoding.Builder
-      Data.Aeson.Encoding.Internal
-      Data.Aeson.Internal
-      Data.Aeson.Internal.Functions
-      Data.Aeson.Internal.Time
-      Data.Aeson.Parser
-      Data.Aeson.Parser.Internal
-      Data.Aeson.Parser.Time
-      Data.Aeson.Parser.Unescape
-      Data.Aeson.Parser.UnescapeFFI
-      Data.Aeson.Parser.UnescapePure
-      Data.Aeson.TH
-      Data.Aeson.Text
-      Data.Aeson.Types
-      Data.Aeson.Types.Class
-      Data.Aeson.Types.FromJSON
-      Data.Aeson.Types.Generic
-      Data.Aeson.Types.Internal
-      Data.Aeson.Types.ToJSON
-      Data.Attoparsec.Time
-      Data.Attoparsec.Time.Internal
-
-  else
-
-    build-depends: aeson
-
-    reexported-modules:
-      Data.Aeson,
-      Data.Aeson.Encoding,
-      Data.Aeson.Parser.Internal,
-      Data.Aeson.Text,
-      Data.Aeson.TH,
-      Data.Aeson.Types
-
-executable aeson-benchmark-auto-compare
+executable pheres-benchmark-auto-compare
   default-language: Haskell2010
   main-is: AutoCompare.hs
   hs-source-dirs: .
@@ -121,32 +46,28 @@ executable aeson-benchmark-auto-compare
     Auto.G.BigSum
     Options
   build-depends:
-    aeson-benchmarks,
+    pheres-benchmarks,
     base,
     criterion,
     deepseq,
     template-haskell
 
-executable aeson-benchmark-escape
+executable pheres-benchmark-escape
   default-language: Haskell2010
   main-is: Escape.hs
   hs-source-dirs: ../examples .
   ghc-options: -Wall -O2 -rtsopts
-  if flag(local-aeson)
-    build-depends:
-      aeson-benchmarks,
-      base,
-      base-compat,
-      bytestring,
-      criterion >= 1.0,
-      deepseq,
-      ghc-prim,
-      text
-  else
-    -- Disabled because of inaccessible internals
-    buildable: False
+  build-depends:
+    pheres-benchmarks,
+    base,
+    base-compat,
+    bytestring,
+    criterion >= 1.0,
+    deepseq,
+    ghc-prim,
+    text
 
-executable aeson-benchmark-compare
+executable pheres-benchmark-compare
   default-language: Haskell2010
   main-is: Compare.hs
   hs-source-dirs: ../examples .
@@ -159,7 +80,7 @@ executable aeson-benchmark-compare
     Twitter.Manual
     Typed.Common
   build-depends:
-    aeson-benchmarks,
+    pheres-benchmarks,
     base,
     base-compat,
     buffer-builder,
@@ -170,13 +91,13 @@ executable aeson-benchmark-compare
     json-builder,
     text
 
-executable aeson-benchmark-micro
+executable pheres-benchmark-micro
   default-language: Haskell2010
   main-is: Micro.hs
   hs-source-dirs: ../examples .
   ghc-options: -Wall -O2 -rtsopts
   build-depends:
-    aeson-benchmarks,
+    pheres-benchmarks,
     base,
     base-compat,
     bytestring,
@@ -185,7 +106,7 @@ executable aeson-benchmark-micro
     ghc-prim,
     text
 
-executable aeson-benchmark-typed
+executable pheres-benchmark-typed
   default-language: Haskell2010
   main-is: Typed.hs
   hs-source-dirs: ../examples .
@@ -201,7 +122,7 @@ executable aeson-benchmark-typed
     Typed.Manual
     Typed.TH
   build-depends:
-    aeson-benchmarks,
+    pheres-benchmarks,
     base,
     base-compat,
     criterion >= 1.0,
@@ -216,12 +137,12 @@ executable aeson-benchmark-typed
   else
     build-depends: bytestring >= 0.10.4
 
-executable aeson-benchmark-compare-with-json
+executable pheres-benchmark-compare-with-json
   default-language: Haskell2010
   main-is: CompareWithJSON.hs
   ghc-options: -Wall -O2 -rtsopts
   build-depends:
-    aeson-benchmarks,
+    pheres-benchmarks,
     base,
     base-compat,
     blaze-builder,
@@ -231,12 +152,12 @@ executable aeson-benchmark-compare-with-json
     json,
     text
 
-executable aeson-benchmark-aeson-encode
+executable pheres-benchmark-aeson-encode
   default-language: Haskell2010
   main-is: AesonEncode.hs
   ghc-options: -Wall -O2 -rtsopts
   build-depends:
-    aeson-benchmarks,
+    pheres-benchmarks,
     attoparsec,
     base,
     base-compat,
@@ -244,19 +165,19 @@ executable aeson-benchmark-aeson-encode
     deepseq,
     time
 
-executable aeson-benchmark-aeson-parse
+executable pheres-benchmark-aeson-parse
   default-language: Haskell2010
   main-is: AesonParse.hs
   ghc-options: -Wall -O2 -rtsopts
   build-depends:
-    aeson-benchmarks,
+    pheres-benchmarks,
     attoparsec,
     base,
     base-compat,
     bytestring,
     time
 
-executable aeson-benchmark-json-parse
+executable pheres-benchmark-json-parse
   default-language: Haskell2010
   main-is: JsonParse.hs
   ghc-options: -Wall -O2 -rtsopts
@@ -267,7 +188,7 @@ executable aeson-benchmark-json-parse
     json,
     time
 
-executable aeson-benchmark-dates
+executable pheres-benchmark-dates
   default-language: Haskell2010
   main-is: Dates.hs
   ghc-options: -Wall -O2 -rtsopts
@@ -277,18 +198,18 @@ executable aeson-benchmark-dates
     bytestring,
     criterion,
     deepseq,
-    aeson-benchmarks,
+    pheres-benchmarks,
     text,
     time
   if impl(ghc >= 8.2)
     ghc-options: -Wno-simplifiable-class-constraints
 
-executable aeson-benchmark-map
+executable pheres-benchmark-map
   default-language: Haskell2010
   main-is: AesonMap.hs
   ghc-options: -Wall -O2 -rtsopts
   build-depends:
-    aeson-benchmarks,
+    pheres-benchmarks,
     base,
     base-compat,
     criterion >= 1.0,
@@ -300,12 +221,12 @@ executable aeson-benchmark-map
     text,
     unordered-containers
 
-executable aeson-benchmark-foldable
+executable pheres-benchmark-foldable
   default-language: Haskell2010
   main-is: AesonFoldable.hs
   ghc-options: -Wall -O2 -rtsopts
   build-depends:
-    aeson-benchmarks,
+    pheres-benchmarks,
     base,
     base-compat,
     criterion >= 1.0,

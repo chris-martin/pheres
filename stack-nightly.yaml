@@ -2,6 +2,7 @@ resolver: nightly-2017-12-23
 packages:
 - '.'
 - attoparsec-iso8601
+- benchmarks
 flags:
   aeson:
     fast: true

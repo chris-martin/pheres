@@ -2,6 +2,7 @@ resolver: lts-9.9
 packages:
 - '.'
 - attoparsec-iso8601
+- benchmarks
 extra-deps:
 - quickcheck-instances-0.3.16
 - QuickCheck-2.10.0.1

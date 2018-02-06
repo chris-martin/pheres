@@ -1,6 +1,7 @@
 resolver: lts-10.4
 packages:
 - '.'
+- benchmarks
 flags:
   aeson:
     fast: true

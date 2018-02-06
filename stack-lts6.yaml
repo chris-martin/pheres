@@ -2,6 +2,7 @@ resolver: lts-6.35
 packages:
 - '.'
 - attoparsec-iso8601
+- benchmarks
 extra-deps:
 - integer-logarithms-1
 - semigroups-0.18.2
