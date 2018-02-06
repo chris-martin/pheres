@@ -5,7 +5,7 @@ module Data.Aeson.Parser.Unescape
   ) where
 
 #ifdef CFFI
-import Data.Aeson.Parser.UnescapeFFI (unescapeText)
+import Data.Pheres.Parser.UnescapeFFI (unescapeText)
 #else
 import Data.Aeson.Parser.UnescapePure (unescapeText)
 #endif

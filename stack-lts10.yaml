@@ -1,7 +1,8 @@
 resolver: lts-10.4
 packages:
-- '.'
-- benchmarks
+  - '.'
+  - benchmarks
+  - pheres-unescape-ffi
 flags:
   aeson:
     fast: true

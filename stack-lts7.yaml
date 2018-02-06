@@ -1,8 +1,9 @@
 resolver: lts-7.24
 packages:
-- '.'
-- attoparsec-iso8601
-- benchmarks
+  - '.'
+  - attoparsec-iso8601
+  - benchmarks
+  - pheres-unescape-ffi
 extra-deps:
 - QuickCheck-2.10.0.1
 - base-compat-0.9.3

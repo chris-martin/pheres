@@ -7,7 +7,7 @@ import Prelude ()
 import Prelude.Compat
 
 import Criterion.Main
-import qualified Data.Aeson.Parser.UnescapeFFI as FFI
+import qualified Data.Pheres.Parser.UnescapeFFI as FFI
 import qualified Data.Aeson.Parser.UnescapePure as Pure
 
 import qualified Data.ByteString.Char8 as BS

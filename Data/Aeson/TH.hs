@@ -13,9 +13,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 #endif
 
-#include "incoherent-compat.h"
-#include "overlapping-compat.h"
-
 {-|
 Module:      Data.Aeson.TH
 Copyright:   (c) 2011-2016 Bryan O'Sullivan
@@ -1110,13 +1107,13 @@ class LookupField a where
     lookupField :: (Value -> Parser a) -> String -> String
                 -> Object -> T.Text -> Parser a
 
-instance OVERLAPPABLE_ LookupField a where
+instance {-# OVERLAPPABLE #-} LookupField a where
     lookupField = lookupFieldWith
 
-instance INCOHERENT_ LookupField (Maybe a) where
+instance {-# INCOHERENT #-} LookupField (Maybe a) where
     lookupField pj _ _ = parseOptionalFieldWith pj
 
-instance INCOHERENT_ LookupField (Semigroup.Option a) where
+instance {-# INCOHERENT #-} LookupField (Semigroup.Option a) where
     lookupField pj tName rec obj key =
         fmap Semigroup.Option
              (lookupField (fmap Semigroup.getOption . pj) tName rec obj key)

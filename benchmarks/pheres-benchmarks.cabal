@@ -4,27 +4,19 @@ version: 0
 build-type: Simple
 cabal-version: >=1.10
 
-flag bytestring-builder
-  description: Depend on the bytestring-builder package for backwards compatibility.
-  default: False
-  manual: False
-
 library
   default-language: Haskell2010
 
-  if flag(bytestring-builder)
-    build-depends: bytestring >= 0.9 && < 0.10.4,
-                   bytestring-builder >= 0.10.4 && < 1
-  else
-    build-depends: bytestring >= 0.10.4
-
-  build-depends: pheres
+  build-depends:
+      bytestring >= 0.10.4
+    , pheres
+    , pheres-unescape-ffi
 
   reexported-modules:
     Data.Aeson,
     Data.Aeson.Encoding,
     Data.Aeson.Parser.Internal,
-    Data.Aeson.Parser.UnescapeFFI,
+    Data.Pheres.Parser.UnescapeFFI,
     Data.Aeson.Parser.UnescapePure,
     Data.Aeson.Text,
     Data.Aeson.TH,
@@ -125,17 +117,12 @@ executable pheres-benchmark-typed
     pheres-benchmarks,
     base,
     base-compat,
+    bytestring >= 0.10.4,
     criterion >= 1.0,
     deepseq,
     ghc-prim,
     text,
     time
-
-  if flag(bytestring-builder)
-    build-depends: bytestring >= 0.9 && < 0.10.4,
-                   bytestring-builder >= 0.10.4 && < 1
-  else
-    build-depends: bytestring >= 0.10.4
 
 executable pheres-benchmark-compare-with-json
   default-language: Haskell2010

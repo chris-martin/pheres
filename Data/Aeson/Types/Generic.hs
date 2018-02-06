@@ -9,8 +9,6 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-#include "overlapping-compat.h"
-
 -- |
 -- Module:      Data.Aeson.Types.Generic
 -- Copyright:   (c) 2012-2016 Bryan O'Sullivan
@@ -51,9 +49,9 @@ class IsRecord (f :: * -> *) isRecord | f -> isRecord
 instance (IsRecord f isRecord) => IsRecord (f :*: g) isRecord
   where isUnary = const False
 #if MIN_VERSION_base(4,9,0)
-instance OVERLAPPING_ IsRecord (M1 S ('MetaSel 'Nothing u ss ds) f) False
+instance {-# OVERLAPPING #-} IsRecord (M1 S ('MetaSel 'Nothing u ss ds) f) False
 #else
-instance OVERLAPPING_ IsRecord (M1 S NoSelector f) False
+instance {-# OVERLAPPING #-} IsRecord (M1 S NoSelector f) False
 #endif
 instance (IsRecord f isRecord) => IsRecord (M1 S c f) isRecord
 instance IsRecord (K1 i c) True

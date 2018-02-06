@@ -38,15 +38,16 @@ extra-source-files:
     benchmarks/Makefile
     benchmarks/Typed/*.hs
     benchmarks/json-data/*.json
-    cbits/*.c
     examples/*.cabal
     examples/*.hs
     examples/Twitter/*.hs
-    ffi/Data/Aeson/Parser/*.hs
-    include/*.h
     tests/JSONTestSuite/test_parsing/*.json
     tests/JSONTestSuite/test_transform/*.json
     pure/Data/Aeson/Parser/*.hs
+
+source-repository head
+  type: git
+  location: git://github.com/chris-martin/pheres.git
 
 flag developer
   description: operate in developer mode
@@ -58,11 +59,6 @@ flag fast
   default: False
   manual: True
 
-flag bytestring-builder
-  description: Depend on the bytestring-builder package for backwards compatibility.
-  default: False
-  manual: False
-
 flag cffi
   description: Controls whether to include c-ffi bits or pure haskell. Default to False for security.
   default: False
@@ -70,7 +66,7 @@ flag cffi
 
 library
   default-language: Haskell2010
-  hs-source-dirs: . attoparsec-iso8601/ ffi pure
+  hs-source-dirs: . attoparsec-iso8601/ pure
 
   exposed-modules:
     Data.Aeson
@@ -85,7 +81,6 @@ library
     Data.Aeson.Internal.Time
     Data.Aeson.Parser.Internal
     Data.Aeson.Parser.Unescape
-    Data.Aeson.Parser.UnescapeFFI
     Data.Aeson.Parser.UnescapePure
 
   -- Deprecated modules
@@ -106,9 +101,11 @@ library
     Data.Attoparsec.Time.Internal
 
   build-depends:
+    pheres-unescape-ffi,
     attoparsec >= 0.13.0.1,
     base >= 4.5 && < 5,
     base-compat >= 0.9.1 && < 0.10,
+    bytestring >= 0.10.4 && < 0.11,
     containers >= 0.4.2,
     deepseq >= 1.3 && < 1.5,
     dlist >= 0.6,
@@ -125,38 +122,8 @@ library
     uuid-types >= 1.0.3 && <1.1,
     vector >= 0.8
 
-  if flag(bytestring-builder)
-    build-depends: bytestring >= 0.9.2 && < 0.10.4,
-                   bytestring-builder >= 0.10.4 && < 1
-  else
-    build-depends: bytestring >= 0.10.4 && < 0.11
-
-  if !impl(ghc >= 8.0)
-    -- `Data.Semigroup` and `Control.Monad.Fail` and `Control.Monad.IO.Class` are available in base only since GHC 8.0 / base 4.9
-    build-depends:
-      semigroups >= 0.18.2 && < 0.19,
-      transformers >= 0.2.2.0,
-      transformers-compat >= 0.3,
-      fail == 4.9.*
-
-  if !impl(ghc >= 7.10)
-    -- `Numeric.Natural` is available in base only since GHC 7.10 / base 4.8
-    build-depends: nats >= 1 && < 1.2
-
   ghc-options: -Wall
 
-  if flag(developer)
-    ghc-options: -Werror
-    ghc-prof-options: -auto-all
-
-  if flag(fast)
-    ghc-options: -O0
-  else
-    ghc-options: -O2
-
-  include-dirs: include
-
-  c-sources: cbits/unescape_string.c
   cpp-options: -DCFFI
 
 test-suite tests
@@ -164,7 +131,6 @@ test-suite tests
   type: exitcode-stdio-1.0
   hs-source-dirs: tests
   main-is: Tests.hs
-  c-sources: cbits/unescape_string.c
   ghc-options: -Wall -threaded -rtsopts
 
   other-modules:
@@ -187,12 +153,14 @@ test-suite tests
     HUnit,
     QuickCheck >= 2.10.0.1 && < 2.11,
     pheres,
+    pheres-unescape-ffi,
     integer-logarithms >= 1 && <1.1,
     attoparsec,
     base,
     base-compat,
     base-orphans >= 0.5.3 && <0.7,
     base16-bytestring,
+    bytestring >= 0.10.4,
     containers,
     directory,
     dlist,
@@ -200,6 +168,7 @@ test-suite tests
     generic-deriving >= 1.10 && < 1.13,
     ghc-prim >= 0.2,
     hashable >= 1.2.4.0,
+    hashable-time,
     scientific,
     tagged,
     template-haskell,
@@ -213,28 +182,3 @@ test-suite tests
     uuid-types,
     vector,
     quickcheck-instances >= 0.3.16
-
-  if flag(bytestring-builder)
-    build-depends: bytestring >= 0.9 && < 0.10.4,
-                   bytestring-builder >= 0.10.4 && < 1
-  else
-    build-depends: bytestring >= 0.10.4
-
-  if !impl(ghc >= 8.0)
-    build-depends:
-      semigroups >= 0.18.2 && < 0.19,
-      transformers >= 0.2.2.0,
-      transformers-compat >= 0.3
-
-  if !impl(ghc >= 7.10)
-    build-depends: nats >=1 && <1.2
-
-  if impl(ghc >= 7.8)
-    build-depends: hashable-time >= 0.2 && <0.3
-
-  if flag(fast)
-    ghc-options: -fno-enable-rewrite-rules
-
-source-repository head
-  type:     git
-  location: git://github.com/chris-martin/pheres.git

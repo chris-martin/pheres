@@ -18,9 +18,6 @@
 {-# LANGUAGE PolyKinds #-}
 #endif
 
-#include "incoherent-compat.h"
-#include "overlapping-compat.h"
-
 -- TODO: Drop this when we remove support for Data.Attoparsec.Number
 {-# OPTIONS_GHC -fno-warn-deprecations #-}
 
@@ -780,7 +777,7 @@ pmval .!= val = fromMaybe val <$> pmval
 -- Generic parseJSON
 -------------------------------------------------------------------------------
 
-instance OVERLAPPABLE_ (GFromJSON arity a) => GFromJSON arity (M1 i c a) where
+instance {-# OVERLAPPABLE #-} (GFromJSON arity a) => GFromJSON arity (M1 i c a) where
     -- Meta-information, which is not handled elsewhere, is just added to the
     -- parsed value:
     gParseJSON opts fargs = fmap M1 . gParseJSON opts fargs
@@ -982,7 +979,7 @@ instance (GFromJSON arity f) => FromTaggedObject'' arity f False where
     parseFromTaggedObject'' opts fargs contentsFieldName = Tagged .
       (gParseJSON opts fargs <=< (.: pack contentsFieldName))
 
-instance OVERLAPPING_ FromTaggedObject'' arity U1 False where
+instance {-# OVERLAPPING #-} FromTaggedObject'' arity U1 False where
     parseFromTaggedObject'' _ _ _ _ = Tagged (pure U1)
 
 --------------------------------------------------------------------------------
@@ -1031,7 +1028,7 @@ instance ( FromRecord arity a
       (:*:) <$> parseRecord opts fargs Nothing obj
             <*> parseRecord opts fargs Nothing obj
 
-instance OVERLAPPABLE_ (Selector s, GFromJSON arity a) =>
+instance {-# OVERLAPPABLE #-} (Selector s, GFromJSON arity a) =>
   FromRecord arity (S1 s a) where
     parseRecord opts fargs lab =
       (<?> Key label) . gParseJSON opts fargs <=< (.: label)
@@ -1040,7 +1037,7 @@ instance OVERLAPPABLE_ (Selector s, GFromJSON arity a) =>
           defLabel = pack . fieldLabelModifier opts $
                        selName (undefined :: t s a p)
 
-instance INCOHERENT_ (Selector s, FromJSON a) =>
+instance {-# INCOHERENT #-} (Selector s, FromJSON a) =>
   FromRecord arity (S1 s (K1 i (Maybe a))) where
     parseRecord _ _ (Just lab) obj = (M1 . K1) <$> obj .:? lab
     parseRecord opts _ Nothing obj = (M1 . K1) <$> obj .:? pack label
@@ -1049,7 +1046,7 @@ instance INCOHERENT_ (Selector s, FromJSON a) =>
                     selName (undefined :: t s (K1 i (Maybe a)) p)
 
 -- Parse an Option like a Maybe.
-instance INCOHERENT_ (Selector s, FromJSON a) =>
+instance {-# INCOHERENT #-} (Selector s, FromJSON a) =>
   FromRecord arity (S1 s (K1 i (Semigroup.Option a))) where
     parseRecord opts fargs lab obj = wrap <$> parseRecord opts fargs lab obj
       where
@@ -1116,14 +1113,14 @@ instance
         L1 <$> parseUntaggedValue opts fargs value <|>
         R1 <$> parseUntaggedValue opts fargs value
 
-instance OVERLAPPABLE_
+instance {-# OVERLAPPABLE #-}
     ( GFromJSON            arity a
     , ConsFromJSON         arity a
     ) => FromUntaggedValue arity (C1 c a)
   where
     parseUntaggedValue = gParseJSON
 
-instance OVERLAPPING_
+instance {-# OVERLAPPING #-}
     ( Constructor c )
     => FromUntaggedValue arity (C1 c U1)
   where
