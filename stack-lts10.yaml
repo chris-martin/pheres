@@ -1,4 +1,4 @@
-resolver: lts-10.0
+resolver: lts-10.4
 packages:
 - '.'
 flags:
@@ -7,3 +7,5 @@ flags:
     cffi: false
   attoparsec-iso8601:
     fast: true
+extra-deps:
+  - text-1.2.3.0
